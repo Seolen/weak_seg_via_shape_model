@@ -1,0 +1,43 @@
+# full supervision, segthor heart
+data:
+  dataset: BGDataset
+  dataname: LA
+  anisotropy: False   # True if (max_spacing/min_spacing>3)
+  data_dir: '/group/lishl/weak_datasets/LA_dataset/1011_train_weak_percent_1.0_random/expand_mat/'
+  use_weak: True
+  em_save_pseudo_dir: '/group/lishl/weak_exp/em_save_pseudo/'
+
+model:
+  network: 'Generic_UNet'
+  pool_op_kernel_sizes: '[(2, 2, 2), (2, 2, 2), (2, 2, 2), (2, 2, 2)]'   # [16, 16, 16]
+  conv_kernel_sizes: '[(3, 3, 3), (3, 3, 3), (3, 3, 3), (3, 3, 3), (3, 3, 3)]'
+  use_finetune: True
+  finetune_model_path: '/group/lishl/weak_exp/checkpoints_li/1012_la_r10_01/best_model.pth'
+  finetune_model_path_ae: '/group/lishl/weak_exp/checkpoints_li/1013_la_aelo_102/best_model.pth'
+  use_emiter: True  # iterative EM forward
+  iterate_epoch: 0  # iterate per epoch rather than per iteration, {1, 10, 30}
+  fpr_drop_freq: 0  # the frequency of fp_filter_ratio dropping (in epochs)
+  filter_phase:  'probae'
+  fp_filter_ratio: 0.5
+  fn_filter_ratio: 2.0
+  filter_extra: 'disable_weak_add_fg'
+
+train:
+  n_epochs: 500 #100
+  n_batches: 250  #250
+  train_batch: 2 #4
+  valid_batch: 1 #4
+
+  pseudo_one_supervision: True
+  pseudo_loss_weight: 10  # loss: weak + pseudo * weight
+  weak_loss_weight:   0.1
+  loss_name: 'MultipleOutputLoss2' #'CEDiceLoss'  #
+  with_dice_loss: 0
+  fg_weight: 1  #16
+  auto_weight_fg_bg: True
+  draw_fgbg: False
+
+  optimizer: SGD    # Adam
+  momentum: 0.99
+  lr: 1.0e-3
+  lr_decay: 'constant'  #'plateau'

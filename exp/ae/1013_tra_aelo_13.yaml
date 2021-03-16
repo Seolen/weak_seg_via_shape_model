@@ -1,0 +1,65 @@
+# full supervision, segthor heart
+data:
+  dataset: AEDataset
+  dataname: Trachea
+  anisotropy: False   # True if (max_spacing/min_spacing>3)
+  train_dir: '/group/lishl/weak_exp/output/1012_tra_r1_01_train/'
+  val_dir: '/group/lishl/weak_exp/output/1012_tra_r1_01_val/'
+  use_weak: False
+
+model:
+  network: 'Generic_UNet'
+  use_author_block: False   # default nnUNet params
+  pre_model: ''
+  pool_op_kernel_sizes: '[(2, 2, 2), (2, 2, 2), (2, 2, 2), (2, 2, 2), (2, 1, 1)]'   # [32, 16, 16]
+  conv_kernel_sizes: '[(3, 3, 3), (3, 3, 3), (3, 3, 3), (3, 3, 3), (3, 3, 3), (3, 1, 1)]'
+
+
+train:
+  n_epochs: 100 #100
+  n_batches: 250  #250
+  train_batch: 2 #4
+  valid_batch: 1 #4
+
+  loss_name: 'MultipleOutputLoss2' #'CEDiceLoss'  #
+  with_dice_loss: 0
+  fg_weight: 1  #16
+  auto_weight_fg_bg: False
+  draw_fgbg: False
+
+  optimizer: SGD    # Adam
+  momentum: 0.99
+  lr: 1.0e-2
+  lr_decay: 'poly'  #'plateau'
+
+
+ae:
+  input: pred_aug
+
+  do_scaling: True
+  p_scale: 0.2
+  do_rotation: True
+  p_rot: 0.2
+  do_translate: False
+  p_trans: 0.8
+  trans_max_shifts: 10      # related to x y resolution
+
+  label_percent: 10         # 10% labeled
+  use_pred_num: 1           # num of employed training preds    {3,5,10}
+  use_prob_top: True       # use TopK probs or TopK upper bound    {False, True}
+  pseudo_label_lcc: True   # largest CC for pseudo label loading   {False, True}
+  branch_refine: False      # handcraft branch region refinement    {False, True}
+
+
+
+  extra_near_nums: '[0, 0]'   # extraneous unconnected regions: near branch center  [0, 2]    #Adjust1
+  extra_near_dist: '[20, 20, 20]'  # Adjust No need
+  extra_far_nums:  '[2, 4]'   # Adjust2: No need
+  extra_radius:    '[2, 5]'   # radius [2, 5]
+  extra_slices:    '[4, 10]'  # extraneous slices along z  # Adjust: from [8, 15]->[4, 10]
+
+  dilate_nums: '[1, 2]'       # dilated regions near pred boundaries  [0: disable]  #Adjust3
+  dilate_iters: '[5, 11]'     # dilated iters(size) for each new region
+  extend_nums_head: '[1, 9]'  # elongation along trachea head
+  extend_nums_branch: '[4, 11]' # elongation along trachea tail
+  close_iters: '[3, 6]'       # closing operation iters for the whole region  [0: disable]

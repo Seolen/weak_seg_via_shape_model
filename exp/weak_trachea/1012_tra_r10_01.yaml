@@ -1,0 +1,33 @@
+# full supervision, segthor heart
+data:
+  dataset: BGDataset
+  dataname: Trachea
+  anisotropy: False   # True if (max_spacing/min_spacing>3)
+  data_dir: '/group/lishl/weak_datasets/0108_SegTHOR/1011_trachea_train_weak_percent_1.0_random/expand_mat/'
+  use_weak: True
+
+model:
+  network: 'Generic_UNet'
+  use_author_block: False   # default nnUNet params
+  pre_model: ''
+  pool_op_kernel_sizes: '[(2, 2, 2), (2, 2, 2), (2, 2, 2), (2, 2, 2), (2, 1, 1)]'   # [32, 16, 16]
+  conv_kernel_sizes: '[(3, 3, 3), (3, 3, 3), (3, 3, 3), (3, 3, 3), (3, 3, 3), (3, 1, 1)]'
+
+
+train:
+  n_epochs: 200 #100
+  n_batches: 250  #250
+  train_batch: 2 #4
+  valid_batch: 1 #4
+
+  loss_name: 'MultipleOutputLoss2' #'CEDiceLoss'  #
+  with_dice_loss: 0
+  fg_weight: 1  #16
+  auto_weight_fg_bg: True
+  draw_fgbg: False
+
+  optimizer: SGD    # Adam
+  momentum: 0.99
+  lr: 1.0e-2
+  lr_decay: 'poly'  #''
+  min_lr: 1.0e-3
