@@ -31,7 +31,8 @@ python main.py --cfg exp/iterative/1016_trar1_emitw_24.yaml --id 1016_trar1_emit
 
 ## Inference with trained model
 ```
-python main.py --cfg exp/iterative/1016_trar1_emitw_24.yaml --id 1016_trar1_emitw_24 --parallel --demo 'val' --weight_path '/*/*/best_model.pth'
+python main.py --cfg exp/iterative/1016_trar1_emitw_24.yaml --id 1016_trar1_emitw_24 --parallel \
+  --demo 'val' --weight_path '/*/*/best_model.pth' [--ae_weight_path '/*/*/best_model.pth']
 ```
 
 ---
