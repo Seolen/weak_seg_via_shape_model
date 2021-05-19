@@ -1,6 +1,6 @@
 
 
-Official implementation of *Weakly Supervised Volumetric Segmentation via Self-taught Shape Denoising Model*
+The implementation of [Weakly Supervised Volumetric Segmentation via Self-taught Shape Denoising Model](https://openreview.net/forum?id=Koyg3kvH-Mq)
 
 # Installation
 ---
@@ -12,7 +12,7 @@ Official implementation of *Weakly Supervised Volumetric Segmentation via Self-t
 
 # Get Started
 ## Data Preparation
-Please refer to [data_preparation.md](../data_preparation.md)
+Please refer to [data_preparation.md]()
 ```
 python data_process/process_pipeline2.py
 ```
